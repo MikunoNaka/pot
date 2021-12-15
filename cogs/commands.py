@@ -1,3 +1,9 @@
+# Pot - Discord bot which is pog. Pot.
+# Version - 0.1
+# Licensed under the MIT license - https://opensource.org/licenses/MIT
+#
+# Copyright (c) 2021 Vidhu Kant Sharma
+
 import discord
 from discord.ext import commands
 
