@@ -49,6 +49,22 @@ class ModCommands(commands.Cog):
         await member.ban(reason=reason)
         await ctx.send(KICK_BAN["member_banned"].format(member=member, reason=reason))
 
+    # error handling for kick and ban
+    @kick.error
+    @ban.error
+    async def kick_ban_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(KICK_BAN["MissingRequiredArgument"])
+
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(KICK_BAN["MissingPermissions"])
+
+        if isinstance(error, commands.MemberNotFound):
+            await ctx.send(KICK_BAN["MemberNotFound"])
+
+        if isinstance(error, commands.CommandInvokeError):
+            await ctx.send(KICK_BAN["CommandInvokeError"])
+
     # unbanning a member
     @commands.has_permissions(ban_members=True)
     @commands.command()
@@ -70,6 +86,15 @@ class ModCommands(commands.Cog):
                 return
         # if member not in ban_entry
         await ctx.send(KICK_BAN["unban_member_notfound"].format(member=member))
+
+    # unban error handling
+    @unban.error
+    async def unban_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(KICK_BAN["MissingRequiredArgument"])
+
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(KICK_BAN["MissingPermissions"])
 
 def setup(bot):
     bot.add_cog(ModCommands(bot))
