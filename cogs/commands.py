@@ -25,5 +25,10 @@ class Commands(commands.Cog):
     async def ping(self, ctx):
         await ctx.send(PING_MESSAGE)
 
+    @commands.command()
+    async def ctx(self, ctx):
+        await ctx.send(ctx.__dict__)
+        print(ctx.__dict__)
+
 def setup(bot):
     bot.add_cog(Commands(bot))
