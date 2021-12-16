@@ -7,17 +7,23 @@
 import discord
 from discord.ext import commands
 
+# to import from parent directory
+import sys
+sys.path.append('..')
+
+# import ../phrases.py
+try:
+    from phrases import PING_MESSAGE
+except ImportError:
+    PING_MESSAGE = "pong"
+
 class Commands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command()
-    async def pepe(self, ctx):
-        await ctx.send("pepe")
-
-    @commands.command()
-    async def context(self, ctx):
-        print(ctx.__dict__)
+    async def ping(self, ctx):
+        await ctx.send(PING_MESSAGE)
 
 def setup(bot):
     bot.add_cog(Commands(bot))

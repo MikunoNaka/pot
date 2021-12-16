@@ -6,7 +6,17 @@
 
 from discord.ext import commands
 
+# to import from parent directory
+import sys
+sys.path.append('..')
+
+# import ../phrases.py
+try:
+    from phrases import ON_READY_MESSAGE
+except ImportError:
+    ON_READY_MESSAGE = "Logged in as {client_username}"
+
 # this is a bot. and it's pog. POT
 class Pot(commands.Bot):
     async def on_ready(self):
-        print("Logged in as", self.user.name, "(id=" + str(self.user.id) + ")")
+        print(ON_READY_MESSAGE.format(client_username=self.user.name))
