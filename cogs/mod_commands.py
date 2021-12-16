@@ -20,6 +20,11 @@ except ImportError:
         , "MissingPermissions": "You don't have the permission to do so."
         , "MemberNotFound": "Member does not exist."
         , "CommandInvokeError": "Failed to kick user."
+
+        , "member_kicked": "Member {member} has been kicked for reason \"{reason}\""
+        , "member_banned": "Member {member} has been banned for reason \"{reason}\""
+        , "member_unbanned": "User {member} has been unbanned."
+        , "unban_member_notfound": "Banned member {member} not found"
     }
 
 
@@ -32,12 +37,14 @@ class ModCommands(commands.Cog):
     @commands.command()
     async def kick(self, ctx, member: discord.Member, *, reason=None):
         await member.kick(reason=reason)
+        await ctx.send(KICK_BAN["member_kicked"].format(member=member, reason=reason))
 
     # banning a member
     @commands.has_permissions(ban_members=True)
     @commands.command()
     async def ban(self, ctx, member: discord.Member, *, reason=None):
         await member.ban(reason=reason)
+        await ctx.send(KICK_BAN["member_banned"].format(member=member, reason=reason))
 
     # error handling for kick and ban
     @kick.error
@@ -54,6 +61,24 @@ class ModCommands(commands.Cog):
 
         if isinstance(error, commands.CommandInvokeError):
             await ctx.send(KICK_BAN["CommandInvokeError"])
+
+    # unbanning a member
+    @commands.has_permissions(ban_members=True)
+    @commands.command()
+    async def unban(self, ctx, *, member):
+        banned_users = await(ctx.guild.bans())
+        member_name, member_discriminator = member.split("#")
+
+        for ban_entry in banned_users:
+            user = ban_entry.user
+
+            if (user.name, user.discriminator) == (member_name, member_discriminator):
+                await ctx.guild.unban(user)
+                await ctx.send(KICK_BAN["member_unbanned"].format(member=user.mention))
+                return
+        # if member not in ban_entry
+        await ctx.send(KICK_BAN["unban_member_notfound"].format(member=member))
+
 
 def setup(bot):
     bot.add_cog(ModCommands(bot))
