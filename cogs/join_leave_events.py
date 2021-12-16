@@ -20,10 +20,11 @@ except ImportError:
 
 # import ../config.py
 try: 
-   from config import WELCOME_CHANNEL_ID, GOODBYE_CHANNEL_ID
+   from config import WELCOME_CHANNEL_ID, GOODBYE_CHANNEL_ID, NEW_MEMBER_ROLES
 except ImportError:
     WELCOME_CHANNEL_ID = None
     GOODBYE_CHANNEL_ID = None
+    NEW_MEMBER_ROLES = None
 
 class JoinLeaveEvents(commands.Cog):
     def __init__(self, bot):
@@ -31,9 +32,13 @@ class JoinLeaveEvents(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        message = WELCOME_MESSAGE.format(username=member)
+        # set roles for new member (if specified)
+        if NEW_MEMBER_ROLES:
+            for role in NEW_MEMBER_ROLES:
+                r = discord.utils.get(member.guild.roles, name=role)
+                await member.add_roles(r)
 
-        # check which channel to send to
+        # check which channel to send welcome message to
         if WELCOME_CHANNEL_ID != None:
             channel = self.bot.get_channel(WELCOME_CHANNEL_ID)
         elif member.guild.system_channel:
@@ -41,13 +46,13 @@ class JoinLeaveEvents(commands.Cog):
         else:
             return
 
+        # send welcome message
+        message = WELCOME_MESSAGE.format(username=member)
         await channel.send(message)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        message = GOODBYE_MESSAGE.format(username=member)
-
-        # check which channel to send to
+        # check which channel to send goodbye message to
         if WELCOME_CHANNEL_ID != None:
             channel = self.bot.get_channel(WELCOME_CHANNEL_ID)
         elif member.guild.system_channel:
@@ -55,6 +60,8 @@ class JoinLeaveEvents(commands.Cog):
         else:
             return
 
+        # send goodbye message
+        message = GOODBYE_MESSAGE.format(username=member)
         await channel.send(message)
 
 def setup(bot):
