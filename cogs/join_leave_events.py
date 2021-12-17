@@ -13,17 +13,26 @@ sys.path.append('..')
 
 # import ../phrases.py
 try: 
-   from phrases import WELCOME_MESSAGE, GOODBYE_MESSAGE
+   from phrases import WELCOME_MESSAGE
 except ImportError:
     WELCOME_MESSAGE = "{username} has joined our server."
+try: 
+   from phrases import GOODBYE_MESSAGE
+except ImportError:
     GOODBYE_MESSAGE = "{username} has left our server."
 
 # import ../config.py
 try: 
-   from config import WELCOME_CHANNEL_ID, GOODBYE_CHANNEL_ID, NEW_MEMBER_ROLES
+   from config import WELCOME_CHANNEL_ID
 except ImportError:
     WELCOME_CHANNEL_ID = None
+try: 
+   from config import GOODBYE_CHANNEL_ID
+except ImportError:
     GOODBYE_CHANNEL_ID = None
+try: 
+   from config import NEW_MEMBER_ROLES
+except ImportError:
     NEW_MEMBER_ROLES = None
 
 class JoinLeaveEvents(commands.Cog):
