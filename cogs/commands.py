@@ -17,6 +17,10 @@ try:
     from phrases import PING_MESSAGE
 except ImportError:
     PING_MESSAGE = "pong"
+try:
+    from phrases import COMMAND_NOT_FOUND_MESSAGE
+except ImportError:
+    COMMAND_NOT_FOUND_MESSAGE = "I don't know that command?!"
 
 class Commands(commands.Cog):
     def __init__(self, bot):
@@ -26,7 +30,7 @@ class Commands(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
-            await ctx.send('I do not know that command?!')
+            await ctx.send(COMMAND_NOT_FOUND_MESSAGE)
         else:
             print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)

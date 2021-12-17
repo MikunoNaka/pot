@@ -10,6 +10,11 @@ import discord
 
 from clients.pot import Pot
 
+try:
+    from config import BOT_PREFIX
+except ImportError:
+    BOT_PREFIX = "pt!"
+
 def main():
     # load env vars to get bot token
     load_dotenv('.env')
@@ -18,10 +23,12 @@ def main():
     intents.members = True
 
     bot = Pot(
-        command_prefix=".",
-        intents=intents
+        command_prefix=BOT_PREFIX,
+        intents=intents,
     )
+    bot.client = bot
 
+    # load cogs
     for file in os.listdir("./cogs/"):
         if file.endswith(".py"):
             bot.load_extension(f"cogs.{file[:-3]}")

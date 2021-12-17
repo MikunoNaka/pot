@@ -4,6 +4,7 @@
 #
 # Copyright (c) 2021 Vidhu Kant Sharma
 
+import discord
 from discord.ext import commands
 
 # to import from parent directory
@@ -15,8 +16,13 @@ try:
     from phrases import ON_READY_MESSAGE
 except ImportError:
     ON_READY_MESSAGE = "Logged in as {client_username}"
+try:
+    from phrases import BOT_STATUS
+except ImportError:
+    BOT_STATUS = "Yo doods I am Pot"
 
 # this is a bot. and it's pog. POT
 class Pot(commands.Bot):
     async def on_ready(self):
         print(ON_READY_MESSAGE.format(client_username=self.user.name))
+        await self.client.change_presence(status=discord.Status.online, activity=discord.Game(BOT_STATUS))
